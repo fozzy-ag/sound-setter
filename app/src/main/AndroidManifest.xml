@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tools.soundsetter"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <!-- Required to write the system default ringtone / notification / alarm settings. -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <!-- Used only to resolve display names of the sounds currently set (read-only, optional). -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <!-- Android 9 and below: needed to publish the copied file into the public Ringtones/Notifications/Alarms folders. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+
+    <!-- Optional elevated (ADB) fallback via Shizuku for OEM-restricted devices. -->
+    <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+
+    <queries>
+        <package android:name="moe.shizuku.manager" />
+    </queries>
+
+    <application
+        android:label="Sound Setter"
+        android:icon="@drawable/ic_launcher"
+        android:theme="@android:style/Theme.Material.Light"
+        android:allowBackup="true"
+        android:supportsRtl="true">
+
+        <!-- Shizuku binder hand-off (see https://github.com/RikkaApps/Shizuku-API). -->
+        <provider
+            android:name="rikka.shizuku.ShizukuProvider"
+            android:authorities="com.tools.soundsetter.shizuku"
+            android:multiprocess="false"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+        <meta-data
+            android:name="moe.shizuku.client.V3_SUPPORT"
+            android:value="true" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="Sound Setter">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
