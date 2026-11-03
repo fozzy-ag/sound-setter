@@ -57,10 +57,15 @@ jobs:
         run: |
           set -euo pipefail
           enc="$(python3 -c 'import os,urllib.parse;print(urllib.parse.quote(os.environ["LABEL"]))')"
-          gh api --method POST \
+          code="$(curl -sS -o asset.json -w '%{http_code}' --max-time 300 \
+            --request POST \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            --header "Accept: application/vnd.github+json" \
             --header "X-GitHub-Api-Version: 2022-11-28" \
             --header "Content-Type: application/vnd.android.package-archive" \
-            --input "${{ inputs.asset_name }}" \
-            "repos/${{ github.repository }}/releases/${{ inputs.release_id }}/assets?name=${{ inputs.asset_name }}&label=${enc}" \
-            > asset.json
-          python3 -c "import json;d=json.load(open('asset.json'));print('asset id:',d.get('id'));print('name:',d.get('name'));print('size:',d.get('size'));print('content_type:',d.get('content_type'));print('download:',d.get('browser_download_url'))"
+            --data-binary "@${{ inputs.asset_name }}" \
+            "https://uploads.github.com/repos/${{ github.repository }}/releases/${{ inputs.release_id }}/assets?name=${{ inputs.asset_name }}&label=${enc}")"
+          echo "HTTP ${code}"
+          cat asset.json
+          echo
+          [ "${code}" = "201" ]
