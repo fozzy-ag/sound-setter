@@ -6,9 +6,10 @@ own sound settings, publishes your file where the system expects it, writes the
 setting, and **verifies by reading it back**. If anything fails, it tells you
 exactly which step failed and how to fix it.
 
-**APK:** [`dist/SoundSetter-v1.0.apk`](dist/SoundSetter-v1.0.apk)
+**Build it yourself:** run `./build.sh` — it produces `dist/SoundSetter-v1.0.apk`
 (min Android 7.0 / API 24, targets Android 14 / API 34, self-signed with a local
-key in `keystore/` — re-sign with your own key if you distribute it)
+key that the script generates; re-sign with your own key if you distribute it).
+Build artifacts (`build/`, `dist/`, `keystore/`) are deliberately not committed.
 
 ## What it does
 
